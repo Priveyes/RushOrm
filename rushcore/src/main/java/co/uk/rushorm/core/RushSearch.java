@@ -1,5 +1,7 @@
 package co.uk.rushorm.core;
 
+import androidx.annotation.*;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -68,12 +70,12 @@ public class RushSearch {
 
         String limit = "";
         if(this.limit != null) {
-            limit = "LIMIT " + Integer.toString(this.limit);
+            limit = "LIMIT " + this.limit;
         }
 
         String offset = "";
         if(this.offset != null) {
-            offset = "OFFSET " + Integer.toString(this.offset);
+            offset = "OFFSET " + this.offset;
         }
 
         StringBuilder groupBy = new StringBuilder();
@@ -189,7 +191,7 @@ public class RushSearch {
     }
 
     public RushSearch whereEqual(String field, boolean value) {
-        return where(field, "=", "'" + Boolean.toString(value) + "'");
+        return where(field, "=", "'" + value + "'");
     }
 
     public RushSearch whereEqual(String field, Date date) {
@@ -217,7 +219,7 @@ public class RushSearch {
     }
 
     public RushSearch whereNotEqual(String field, boolean value) {
-        return where(field, "<>", "'" + Boolean.toString(value) + "'");
+        return where(field, "<>", "'" + value + "'");
     }
 
     public RushSearch whereNotEqual(String field, Date date) {
@@ -308,10 +310,15 @@ public class RushSearch {
     }
 
     public RushSearch whereIN(String column, List<String> values) {
-        String inStatement = "(";
+        StringBuilder inStatementBuilder = new StringBuilder("(");
         for (String value : values) {
-            inStatement += value + ",";
+            inStatementBuilder
+                    .append("\"")
+                    .append(value)
+                    .append("\"")
+                    .append(",");
         }
+        String inStatement = inStatementBuilder.toString();
         if(!values.isEmpty()) {
             inStatement = inStatement.substring(0, inStatement.length() - 1);
         }
@@ -351,6 +358,7 @@ public class RushSearch {
             "\"order\":[%s]," +
             "\"where\":[%s]}";
 
+    @NonNull
     @Override
     public String toString() {
 

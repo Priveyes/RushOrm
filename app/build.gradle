@@ -5,8 +5,8 @@ android {
     buildToolsVersion '28.0.3'
 
     defaultConfig {
-        applicationId "co.uk.friendlyapps"
-        minSdkVersion 14
+        applicationId "co.uk.rushexample"
+        minSdkVersion 19
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
@@ -28,6 +28,8 @@ android {
 }
 
 dependencies {
-    implementation 'com.android.support:support-v4:28.0.0'
+//    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation project(':rushandroid')
+    implementation 'androidx.appcompat:appcompat:1.0.2'
+    implementation 'androidx.drawerlayout:drawerlayout:1.0.0'
 }
