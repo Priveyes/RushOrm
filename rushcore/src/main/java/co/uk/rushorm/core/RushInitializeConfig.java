@@ -1,28 +1,9 @@
 package co.uk.rushorm.core;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
-import co.uk.rushorm.core.implementation.Insert.ConflictSaveStatementGenerator;
-import co.uk.rushorm.core.implementation.Insert.ReflectionSaveStatementGenerator;
-import co.uk.rushorm.core.implementation.Insert.RushSqlInsertGenerator;
-import co.uk.rushorm.core.implementation.Insert.SqlBulkInsertGenerator;
-import co.uk.rushorm.core.implementation.Insert.SqlSingleInsertGenerator;
-import co.uk.rushorm.core.implementation.ReflectionClassLoader;
-import co.uk.rushorm.core.implementation.ReflectionDeleteStatementGenerator;
-import co.uk.rushorm.core.implementation.ReflectionJoinStatementGenerator;
-import co.uk.rushorm.core.implementation.ReflectionTableStatementGenerator;
-import co.uk.rushorm.core.implementation.ReflectionUpgradeManager;
-import co.uk.rushorm.core.implementation.RushColumnBoolean;
-import co.uk.rushorm.core.implementation.RushColumnBooleanNumerical;
-import co.uk.rushorm.core.implementation.RushColumnDate;
-import co.uk.rushorm.core.implementation.RushColumnDouble;
-import co.uk.rushorm.core.implementation.RushColumnFloat;
-import co.uk.rushorm.core.implementation.RushColumnInt;
-import co.uk.rushorm.core.implementation.RushColumnLong;
-import co.uk.rushorm.core.implementation.RushColumnShort;
-import co.uk.rushorm.core.implementation.RushColumnString;
-import co.uk.rushorm.core.implementation.RushColumnsImplementation;
+import co.uk.rushorm.core.implementation.Insert.*;
+import co.uk.rushorm.core.implementation.*;
 
 /**
  * Created by Stuart on 20/06/15.
@@ -176,11 +157,11 @@ public abstract class RushInitializeConfig {
 
     public RushColumns getRushColumns() {
         if(rushColumns == null) {
-            if(getRushConfig().usingMySql()) {
-                addRushColumn(new RushColumnBooleanNumerical());
-            }else {
+//            if(getRushConfig().usingMySql()) {
+//                addRushColumn(new RushColumnBooleanNumerical());
+//            }else {
                 addRushColumn(new RushColumnBoolean());
-            }
+//            }
             addRushColumn(new RushColumnDate());
             addRushColumn(new RushColumnDouble());
             addRushColumn(new RushColumnInt());

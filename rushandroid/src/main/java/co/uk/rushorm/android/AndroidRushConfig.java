@@ -1,16 +1,10 @@
 package co.uk.rushorm.android;
 
-import android.content.Context;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager;
-import android.os.Build;
-import android.os.Bundle;
+import android.content.*;
+import android.content.pm.*;
+import android.os.*;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import co.uk.rushorm.core.RushConfig;
-import co.uk.rushorm.core.exceptions.RushClassNotFoundException;
+import co.uk.rushorm.core.*;
 
 /**
  * Created by stuartc on 11/12/14.
@@ -73,14 +67,14 @@ public class AndroidRushConfig implements RushConfig {
         return log;
     }
 
-    @Override
-    public boolean usingMySql() {
-        return false;
-    }
+//    @Override
+//    public boolean usingMySql() {
+//        return false;
+//    }
 
     @Override
     public boolean userBulkInsert() {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN;
+        return true;
     }
 
     @Override

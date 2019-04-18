@@ -41,9 +41,9 @@ public class RushAnnotationCache implements AnnotationCache {
         if(clazz.isAnnotationPresent(RushCustomTableName.class)) {
             tableName = ((RushCustomTableName)clazz.getAnnotation(RushCustomTableName.class)).name();
             prefixTable = false;
-        }else if(rushConfig.usingMySql()) {
-            tableName = serializationName;
-            prefixTable = true;
+//        }else if(rushConfig.usingMySql()) {
+//            tableName = serializationName;
+//            prefixTable = true;
         }else {
             tableName = ReflectionUtils.tableNameForClass(clazz.getName());
             prefixTable = true;

@@ -1,9 +1,7 @@
 package co.uk.rushorm.core.implementation;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import co.uk.rushorm.core.AnnotationCache;
 import co.uk.rushorm.core.Logger;
@@ -109,11 +107,11 @@ public class ReflectionUpgradeManager implements RushUpgradeManager {
                     tableMapping.name.oldName = tableMapping.name.oldName + RushSqlUtils.TEMP_PREFIX;
                     renameTable(tableMapping.name.oldName, tableMapping.name.newName, callback);
                 }
-                if(!rushConfig.usingMySql()) {
+//                if(!rushConfig.usingMySql()) {
                     for (String index : tableMapping.indexes) {
                         callback.runRaw(String.format(RushSqlUtils.DELETE_INDEX, index));
                     }
-                }
+//                }
             }
 
             callback.createClasses(classList);
@@ -124,7 +122,7 @@ public class ReflectionUpgradeManager implements RushUpgradeManager {
             }
 
             for(int i = currentTables.size() - 1; i >= 0; i --) {
-                if(!rushConfig.usingMySql() || currentTables.get(i).startsWith(RushSqlUtils.RUSH_TABLE_PREFIX)) {
+                if(/*!rushConfig.usingMySql() ||*/ currentTables.get(i).startsWith(RushSqlUtils.RUSH_TABLE_PREFIX)) {
                     dropTable(currentTables.get(i), callback);
                 }
             }
@@ -161,11 +159,11 @@ public class ReflectionUpgradeManager implements RushUpgradeManager {
     
     private List<String> currentTables(UpgradeCallback callback) {
         String sql;
-        if(rushConfig.usingMySql()) {
-            sql = String.format(RushSqlUtils.TABLE_INFO_MYSQL, rushConfig.dbName());
-        }else {
+//        if(rushConfig.usingMySql()) {
+//            sql = String.format(RushSqlUtils.TABLE_INFO_MYSQL, rushConfig.dbName());
+//        }else {
             sql = RushSqlUtils.TABLE_INFO_SQLITE;
-        }
+//        }
         RushStatementRunner.ValuesCallback values = callback.runStatement(sql);
         List<String> tables = new ArrayList<>();
         while(values.hasNext()) {
@@ -177,7 +175,7 @@ public class ReflectionUpgradeManager implements RushUpgradeManager {
     }
 
     private List<String> tablesFields(String table, UpgradeCallback callback) {
-        RushStatementRunner.ValuesCallback values = callback.runStatement(String.format(rushConfig.usingMySql() ? RushSqlUtils.COLUMNS_INFO_MYSQL : RushSqlUtils.COLUMNS_INFO_SQLITE, table));
+        RushStatementRunner.ValuesCallback values = callback.runStatement(String.format(/*rushConfig.usingMySql() ? RushSqlUtils.COLUMNS_INFO_MYSQL :*/ RushSqlUtils.COLUMNS_INFO_SQLITE, table));
         List<String> columns = new ArrayList<>();
         while(values.hasNext()) {
             List<String> columnsInfo = values.next();
@@ -194,7 +192,7 @@ public class ReflectionUpgradeManager implements RushUpgradeManager {
         PotentialTableMapping tableMapping = new PotentialTableMapping();
 
         List<String> oldClassNames = namesForClass(clazz, annotationCache);
-        String[] classNames = oldClassNames.toArray(new String[oldClassNames.size()]);
+        String[] classNames = oldClassNames.toArray(new String[0/*oldClassNames.size()*/]);
         tableMapping.name = new PotentialMapping(classNames, annotationCache.get(clazz).getTableName());
 
         List<Field> fields = new ArrayList<>();
@@ -222,7 +220,12 @@ public class ReflectionUpgradeManager implements RushUpgradeManager {
 
     private void addJoinMappingIfRequired(List<PotentialMapping> potentialMappings, Class<? extends Rush> parent, Class<? extends Rush> child, Field field, Map<Class<? extends Rush>, AnnotationCache> annotationCache) {
 
-        String newName = ReflectionUtils.joinTableNameForClass(annotationCache.get(parent).getTableName(), annotationCache.get(child).getTableName(), field.getName());
+        String newName = null;
+        try {
+            newName = ReflectionUtils.joinTableNameForClass(annotationCache.get(parent).getTableName(), annotationCache.get(child).getTableName(), field.getName());
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
         List<String> possibleOldNames = new ArrayList<>();
         List<String> parentNames = namesForClass(parent, annotationCache);
         List<String> childNames = namesForClass(child, annotationCache);
@@ -230,9 +233,7 @@ public class ReflectionUpgradeManager implements RushUpgradeManager {
         List<String> fieldNames = new ArrayList<>();
         if(field.isAnnotationPresent(RushRenamed.class)){
             RushRenamed rushRenamed = field.getAnnotation(RushRenamed.class);
-            for(String name : rushRenamed.names()) {
-                fieldNames.add(name);
-            }
+            fieldNames.addAll(Arrays.asList(rushRenamed.names()));
         }
         fieldNames.add(field.getName());
 

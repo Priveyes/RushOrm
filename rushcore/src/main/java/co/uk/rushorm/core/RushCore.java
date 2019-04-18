@@ -1,37 +1,11 @@
 package co.uk.rushorm.core;
 
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.WeakHashMap;
+import java.lang.reflect.*;
+import java.util.*;
 
-import co.uk.rushorm.core.exceptions.RushCoreNotInitializedException;
-import co.uk.rushorm.core.exceptions.RushTableMissingEmptyConstructorException;
-import co.uk.rushorm.core.implementation.Insert.ConflictSaveStatementGenerator;
-import co.uk.rushorm.core.implementation.Insert.RushSqlInsertGenerator;
-import co.uk.rushorm.core.implementation.Insert.SqlBulkInsertGenerator;
-import co.uk.rushorm.core.implementation.Insert.SqlSingleInsertGenerator;
-import co.uk.rushorm.core.implementation.ReflectionClassLoader;
-import co.uk.rushorm.core.implementation.ReflectionDeleteStatementGenerator;
-import co.uk.rushorm.core.implementation.Insert.ReflectionSaveStatementGenerator;
-import co.uk.rushorm.core.implementation.ReflectionJoinStatementGenerator;
-import co.uk.rushorm.core.implementation.ReflectionTableStatementGenerator;
-import co.uk.rushorm.core.implementation.ReflectionUpgradeManager;
-import co.uk.rushorm.core.implementation.ReflectionUtils;
-import co.uk.rushorm.core.implementation.RushAnnotationCache;
-import co.uk.rushorm.core.implementation.RushColumnBoolean;
-import co.uk.rushorm.core.implementation.RushColumnBooleanNumerical;
-import co.uk.rushorm.core.implementation.RushColumnDate;
-import co.uk.rushorm.core.implementation.RushColumnDouble;
-import co.uk.rushorm.core.implementation.RushColumnFloat;
-import co.uk.rushorm.core.implementation.RushColumnInt;
-import co.uk.rushorm.core.implementation.RushColumnLong;
-import co.uk.rushorm.core.implementation.RushColumnShort;
-import co.uk.rushorm.core.implementation.RushColumnString;
-import co.uk.rushorm.core.implementation.RushColumnsImplementation;
-import co.uk.rushorm.core.implementation.RushSqlUtils;
+import co.uk.rushorm.core.exceptions.*;
+import co.uk.rushorm.core.implementation.Insert.*;
+import co.uk.rushorm.core.implementation.*;
 
 /**
  * Created by Stuart on 10/12/14.
@@ -47,11 +21,11 @@ public class RushCore {
     @Deprecated
     public static void initialize(RushClassFinder rushClassFinder, RushStatementRunner statementRunner, RushQueProvider queProvider, RushConfig rushConfig, RushStringSanitizer rushStringSanitizer, Logger logger, List<RushColumn> columns, RushObjectSerializer rushObjectSerializer, RushObjectDeserializer rushObjectDeserializer) {
 
-        if(rushConfig.usingMySql()) {
-            columns.add(new RushColumnBooleanNumerical());
-        }else {
+//        if(rushConfig.usingMySql()) {
+//            columns.add(new RushColumnBooleanNumerical());
+//        }else {
             columns.add(new RushColumnBoolean());
-        }
+//        }
         
         columns.add(new RushColumnDate());
         columns.add(new RushColumnDouble());

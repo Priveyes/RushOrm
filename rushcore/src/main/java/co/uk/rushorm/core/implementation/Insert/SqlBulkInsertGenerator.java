@@ -108,7 +108,7 @@ public class SqlBulkInsertGenerator implements RushSqlInsertGenerator {
 
                 @Override
                 public void doAction() {
-                    String sql = String.format(rushConfig.usingMySql() ? RushSqlUtils.MULTIPLE_INSERT_UPDATE_TEMPLATE_MYSQL : RushSqlUtils.MULTIPLE_INSERT_UPDATE_TEMPLATE_SQLITE,
+                    String sql = String.format(/*rushConfig.usingMySql() ? RushSqlUtils.MULTIPLE_INSERT_UPDATE_TEMPLATE_MYSQL :*/ RushSqlUtils.MULTIPLE_INSERT_UPDATE_TEMPLATE_SQLITE,
                             annotationCache.get(entry.getKey()).getTableName(),
                             columns,
                             valuesString.toString());

@@ -8,7 +8,7 @@ public interface RushConfig {
     int dbVersion();
     boolean inDebug();
     boolean log();
-    boolean usingMySql();
+//    boolean usingMySql();
     boolean userBulkInsert();
     boolean orderColumnsAlphabetically();
 }
