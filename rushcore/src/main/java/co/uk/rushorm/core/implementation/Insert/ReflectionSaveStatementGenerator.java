@@ -26,7 +26,7 @@ public class ReflectionSaveStatementGenerator implements RushSaveStatementGenera
 
     private void addJoin(Map<String, List<BasicJoin>> joins, BasicJoin basicJoin) {
         if(!joins.containsKey(basicJoin.getTable())) {
-            joins.put(basicJoin.getTable(), new ArrayList<BasicJoin>());
+            joins.put(basicJoin.getTable(), new ArrayList<>());
         }
         joins.get(basicJoin.getTable()).add(basicJoin);
     }
@@ -107,7 +107,7 @@ public class ReflectionSaveStatementGenerator implements RushSaveStatementGenera
                     if (rush.getId() != null) {
                         // Clear join tables and re save rows to catch any deleted or changed children
                         if (!joinDeletesMap.containsKey(joinTableName)) {
-                            joinDeletesMap.put(joinTableName, new ArrayList<String>());
+                            joinDeletesMap.put(joinTableName, new ArrayList<>());
                         }
                         joinDeletesMap.get(joinTableName).add(rush.getId());
                     }
@@ -124,7 +124,7 @@ public class ReflectionSaveStatementGenerator implements RushSaveStatementGenera
         }
 
         if (!updateValuesMap.containsKey(rush.getClass())) {
-            updateValuesMap.put(rush.getClass(), new ArrayList<BasicUpdate>());
+            updateValuesMap.put(rush.getClass(), new ArrayList<>());
         }
 
         RushMetaData rushMetaData = saveCallback.getMetaData(rush);
@@ -146,8 +146,9 @@ public class ReflectionSaveStatementGenerator implements RushSaveStatementGenera
     }
 
     private String joinFromField(List<BasicJoin> joins, Rush rush, Field field, Map<Class<? extends Rush>, AnnotationCache> annotationCache) {
-
-        if (Rush.class.isAssignableFrom(field.getType())) {
+//Flip assignableFrom because Rush is never null
+//So isInstance return false instead nullpointerexception
+        if (field.getType().isInstance /*.isAssignableFrom*/(Rush.class)) {
             if(annotationCache.get(field.getType()) == null) {
                 throw new RushClassNotFoundException(rush.getClass());
             }
