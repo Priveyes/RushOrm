@@ -11,7 +11,7 @@ import co.uk.rushorm.core.RushConfig;
 import co.uk.rushorm.core.RushInitializeConfig;
 import co.uk.rushorm.core.RushObjectDeserializer;
 import co.uk.rushorm.core.RushObjectSerializer;
-import co.uk.rushorm.core.RushQueProvider;
+import co.uk.rushorm.core.RushQueueProvider;
 import co.uk.rushorm.core.RushStatementRunner;
 import co.uk.rushorm.core.RushStringSanitizer;
 import co.uk.rushorm.core.RushTextFile;
@@ -54,11 +54,11 @@ public class AndroidInitializeConfig extends RushInitializeConfig {
     }
 
     @Override
-    public RushQueProvider getRushQueProvider() {
-        if(rushQueProvider == null) {
-            rushQueProvider = new AndroidRushQueProvider();
+    public RushQueueProvider getRushQueueProvider() {
+        if(rushQueueProvider == null) {
+            rushQueueProvider = new AndroidRushQueueProvider();
         }
-        return rushQueProvider;
+        return rushQueueProvider;
     }
 
     @Override

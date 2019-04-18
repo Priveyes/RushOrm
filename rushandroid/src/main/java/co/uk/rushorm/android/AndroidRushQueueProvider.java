@@ -3,32 +3,32 @@ package co.uk.rushorm.android;
 import java.util.ArrayList;
 import java.util.List;
 
-import co.uk.rushorm.core.RushQue;
-import co.uk.rushorm.core.RushQueProvider;
+import co.uk.rushorm.core.RushQueue;
+import co.uk.rushorm.core.RushQueueProvider;
 
 /**
  * Created by stuartc on 11/12/14.
  */
-public class AndroidRushQueProvider implements RushQueProvider {
+public class AndroidRushQueueProvider implements RushQueueProvider {
 
-    private List<RushQue> ques = new ArrayList<>();
+    private List<RushQueue> rushQueues = new ArrayList<>();
     private final Object syncToken = new Object();
 
-    public AndroidRushQueProvider() {
-        ques.add(new AndroidRushQue());
+    public AndroidRushQueueProvider() {
+        rushQueues.add(new AndroidRushQueue());
     }
     
     @Override
-    public RushQue blockForNextQue() {
+    public RushQueue blockForNextQueue() {
         synchronized (syncToken) {
-            while (ques.size() < 1) {
+            while (rushQueues.size() < 1) {
                 try {
                     syncToken.wait();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
-            return ques.remove(0);
+            return rushQueues.remove(0);
         }
     }
     
@@ -37,15 +37,15 @@ public class AndroidRushQueProvider implements RushQueProvider {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                rushQueCallback.callback(blockForNextQue());
+                rushQueCallback.callback(blockForNextQueue());
             }
         }).start();
     }
 
     @Override
-    public void queComplete(RushQue que) {
+    public void queComplete(RushQueue rushQueue) {
         synchronized (syncToken) {
-            ques.add(que);
+            rushQueues.add(rushQueue);
             syncToken.notify();
         }
     }

@@ -38,7 +38,6 @@ public class AndroidRushConfig implements RushConfig {
 
             if (bundle != null && bundle.containsKey(RUSH_CLASSES_PACKAGE)) {
                 throw new RushDeprecatedException("Class searching no longer supported please remove this tag <meta-data android:name=\"Rush_classes_package\" android:value=\"co.uk.rushorm\" /> from the manifest and instead add your Rush classes directly to the AndroidInitializeConfig. See www.rushorm.com setup for more details.");
-
             }
 
         } catch (PackageManager.NameNotFoundException e) {
