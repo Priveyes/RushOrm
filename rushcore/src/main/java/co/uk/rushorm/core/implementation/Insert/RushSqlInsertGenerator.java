@@ -12,7 +12,7 @@ import co.uk.rushorm.core.RushSaveStatementGeneratorCallback;
  */
 public interface RushSqlInsertGenerator {
 
-    public void createManyJoins(Map<String, List<BasicJoin>> joinValues, final RushSaveStatementGeneratorCallback saveCallback);
-    public void createOrUpdateObjects(Map<Class<? extends Rush>, List<BasicUpdate>> valuesMap, final Map<Class<? extends Rush>, List<String>> columnsMap, final Map<Class<? extends Rush>, AnnotationCache> annotationCache, final RushSaveStatementGeneratorCallback saveCallback);
+    void createManyJoins(Map<String, List<BasicJoin>> joinValues, final RushSaveStatementGeneratorCallback saveCallback);
+    void createOrUpdateObjects(Map<Class<? extends Rush>, List<BasicUpdate>> valuesMap, final Map<Class<? extends Rush>, List<String>> columnsMap, final Map<Class<? extends Rush>, AnnotationCache> annotationCache, final RushSaveStatementGeneratorCallback saveCallback);
 
 }

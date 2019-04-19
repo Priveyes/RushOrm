@@ -107,7 +107,7 @@ public class ReflectionDeleteStatementGenerator implements RushDeleteStatementGe
                 }
                 if(joinTableName != null) {
                     if (!joinDeletes.containsKey(joinTableName)) {
-                        joinDeletes.put(joinTableName, new ArrayList<String>());
+                        joinDeletes.put(joinTableName, new ArrayList<>());
                     }
                     joinDeletes.get(joinTableName).add(id);
                 }
@@ -116,7 +116,7 @@ public class ReflectionDeleteStatementGenerator implements RushDeleteStatementGe
 
         String table = annotationCache.get(rush.getClass()).getTableName();
         if(!deletes.containsKey(table)) {
-            deletes.put(table, new ArrayList<String>());
+            deletes.put(table, new ArrayList<>());
         }
         deletes.get(table).add(id);
 

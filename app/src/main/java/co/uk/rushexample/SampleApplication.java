@@ -1,16 +1,12 @@
 package co.uk.rushexample;
 
-import android.app.Application;
+import android.app.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
-import co.uk.rushexample.Demo.Car;
-import co.uk.rushexample.Demo.Engine;
-import co.uk.rushexample.Demo.Wheel;
-import co.uk.rushorm.android.AndroidInitializeConfig;
-import co.uk.rushorm.android.RushAndroid;
-import co.uk.rushorm.core.Rush;
+import co.uk.rushexample.Demo.*;
+import co.uk.rushorm.android.*;
+import co.uk.rushorm.core.*;
 
 /**
  * Created by stuartc on 11/12/14.
@@ -25,6 +21,7 @@ public class SampleApplication extends Application {
         classes.add(Car.class);
         classes.add(Engine.class);
         classes.add(Wheel.class);
+        classes.add(Drivers.class);
 
         AndroidInitializeConfig androidInitializeConfig = new AndroidInitializeConfig(getApplicationContext(), classes);
 

@@ -11,7 +11,7 @@ public class Engine extends RushObject {
          /* Empty constructor required */
     }
 
-    public int cylinders;
+    private int cylinders;
 
     public Engine(int cylinders){
         this.cylinders = cylinders;

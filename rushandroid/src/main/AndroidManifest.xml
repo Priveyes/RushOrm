@@ -5,7 +5,7 @@
         android:icon="@drawable/ic_launcher">
 
         <meta-data android:name="Rush_db_version" android:value="1" />
-        <meta-data android:name="Rush_db_name" android:value="rush.db" />
+        <meta-data android:name="Rush_db_name" android:value="rushracing.db" />
         <meta-data android:name="Rush_debug" android:value="true" />
         <meta-data android:name="Rush_log" android:value="true" />
 

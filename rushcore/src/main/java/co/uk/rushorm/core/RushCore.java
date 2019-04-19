@@ -19,7 +19,7 @@ public class RushCore {
      * @deprecated use {@link #initialize(RushInitializeConfig rushInitializeConfig)} instead.
      */
     @Deprecated
-    public static void initialize(RushClassFinder rushClassFinder, RushStatementRunner statementRunner, RushQueueProvider queProvider, RushConfig rushConfig, RushStringSanitizer rushStringSanitizer, Logger logger, List<RushColumn> columns, RushObjectSerializer rushObjectSerializer, RushObjectDeserializer rushObjectDeserializer) {
+    public static void initialize(RushClassFinder rushClassFinder, RushStatementRunner statementRunner, RushQueProvider queProvider, RushConfig rushConfig, RushStringSanitizer rushStringSanitizer, Logger logger, List<RushColumn> columns, RushObjectSerializer rushObjectSerializer, RushObjectDeserializer rushObjectDeserializer) {
 
 //        if(rushConfig.usingMySql()) {
 //            columns.add(new RushColumnBooleanNumerical());
@@ -59,7 +59,7 @@ public class RushCore {
                 rushInitializeConfig.getRushClassFinder(),
                 rushInitializeConfig.getRushTableStatementGenerator(),
                 rushInitializeConfig.getRushStatementRunner(),
-                rushInitializeConfig.getRushQueueProvider(),
+                rushInitializeConfig.getRushQueProvider(),
                 rushInitializeConfig.getRushConfig(),
                 rushInitializeConfig.getRushClassLoader(),
                 rushInitializeConfig.getRushStringSanitizer(),
@@ -78,7 +78,7 @@ public class RushCore {
                                   RushClassFinder rushClassFinder,
                                   RushTableStatementGenerator rushTableStatementGenerator,
                                   final RushStatementRunner statementRunner,
-                                  final RushQueueProvider queProvider,
+                                  final RushQueProvider queProvider,
                                   final RushConfig rushConfig,
                                   RushClassLoader rushClassLoader,
                                   RushStringSanitizer rushStringSanitizer,
@@ -96,16 +96,16 @@ public class RushCore {
         rushCore.loadAnnotationCache(rushClassFinder);
 
         final boolean isFirstRun = statementRunner.isFirstRun();
-        final RushQueue rushQueue = queProvider.blockForNextQueue();
+        final RushQue que = queProvider.blockForNextQue();
         new Thread(new Runnable() {
             @Override
             public void run() {
                 if (isFirstRun) {
-                    rushCore.createTables(new ArrayList<>(rushCore.annotationCache.keySet()), rushQueue);
-                } else if(rushConfig.inDebug() || statementRunner.requiresUpgrade(rushConfig.dbVersion(), rushQueue)){
-                    rushCore.upgrade(new ArrayList<>(rushCore.annotationCache.keySet()), rushUpgradeManager, rushQueue);
+                    rushCore.createTables(new ArrayList<>(rushCore.annotationCache.keySet()), que);
+                } else if(rushConfig.inDebug() || statementRunner.requiresUpgrade(rushConfig.dbVersion(), que)){
+                    rushCore.upgrade(new ArrayList<>(rushCore.annotationCache.keySet()), rushUpgradeManager, que);
                 } else {
-                    queProvider.queComplete(rushQueue);
+                    queProvider.queComplete(que);
                 }
                 statementRunner.initializeComplete(rushConfig.dbVersion());
                 if(initializeListener != null) {
@@ -147,7 +147,7 @@ public class RushCore {
     }
 
     public void save(List<? extends Rush> objects) {
-        RushQueue que = rushQueueProvider.blockForNextQueue();
+        RushQue que = queProvider.blockForNextQue();
         save(objects, que);
     }
 
@@ -158,10 +158,10 @@ public class RushCore {
     }
 
     public void save(final List<? extends Rush> objects, final RushCallback callback) {
-        rushQueueProvider.waitForNextQue(new RushQueueProvider.RushQueCallback() {
+        queProvider.waitForNextQue(new RushQueProvider.RushQueCallback() {
             @Override
-            public void callback(RushQueue rushQueue) {
-                save(objects, rushQueue);
+            public void callback(RushQue rushQue) {
+                save(objects, rushQue);
                 if (callback != null) {
                     callback.complete();
                 }
@@ -170,15 +170,15 @@ public class RushCore {
     }
 
     public void join(List<RushJoin> objects) {
-        RushQueue que = rushQueueProvider.blockForNextQueue();
+        RushQue que = queProvider.blockForNextQue();
         join(objects, que);
     }
 
     public void join(final List<RushJoin> objects, final RushCallback callback) {
-        rushQueueProvider.waitForNextQue(new RushQueueProvider.RushQueCallback() {
+        queProvider.waitForNextQue(new RushQueProvider.RushQueCallback() {
             @Override
-            public void callback(RushQueue rushQueue) {
-                join(objects, rushQueue);
+            public void callback(RushQue rushQue) {
+                join(objects, rushQue);
                 if (callback != null) {
                     callback.complete();
                 }
@@ -187,15 +187,15 @@ public class RushCore {
     }
 
     public void deleteJoin(List<RushJoin> objects) {
-        RushQueue que = rushQueueProvider.blockForNextQueue();
+        RushQue que = queProvider.blockForNextQue();
         deleteJoin(objects, que);
     }
 
     public void deleteJoin(final List<RushJoin> objects, final RushCallback callback) {
-        rushQueueProvider.waitForNextQue(new RushQueueProvider.RushQueCallback() {
+        queProvider.waitForNextQue(new RushQueProvider.RushQueCallback() {
             @Override
-            public void callback(RushQueue rushQueue) {
-                deleteJoin(objects, rushQueue);
+            public void callback(RushQue rushQue) {
+                deleteJoin(objects, rushQue);
                 if (callback != null) {
                     callback.complete();
                 }
@@ -204,7 +204,7 @@ public class RushCore {
     }
 
     public void clearChildren(Class<? extends Rush> parent, String field, Class<? extends Rush> child, String id) {
-        final RushQueue que = rushQueueProvider.blockForNextQueue();
+        final RushQue que = queProvider.blockForNextQue();
         rushJoinStatementGenerator.deleteAll(parent, field, child, id, new RushJoinStatementGenerator.Callback() {
             @Override
             public void runSql(String sql) {
@@ -212,30 +212,30 @@ public class RushCore {
                 statementRunner.runRaw(sql, que);
             }
         }, annotationCache);
-        rushQueueProvider.queComplete(que);
+        queProvider.queComplete(que);
     }
 
     public long count(String sql) {
-        final RushQueue que = rushQueueProvider.blockForNextQueue();
+        final RushQue que = queProvider.blockForNextQue();
         logger.logSql(sql);
         RushStatementRunner.ValuesCallback valuesCallback = statementRunner.runGet(sql, que);
         List<String> results = valuesCallback.next();
         long count = Long.parseLong(results.get(0));
         valuesCallback.close();
-        rushQueueProvider.queComplete(que);
+        queProvider.queComplete(que);
         return count;
     }
 
     public <T extends Rush> List<T> load(Class<T> clazz, String sql) {
-        RushQueue que = rushQueueProvider.blockForNextQueue();
+        RushQue que = queProvider.blockForNextQue();
         return load(clazz, sql, que);
     }
 
     public <T extends Rush> void load(final Class<T> clazz, final String sql, final RushSearchCallback<T> callback) {
-        rushQueueProvider.waitForNextQue(new RushQueueProvider.RushQueCallback() {
+        queProvider.waitForNextQue(new RushQueProvider.RushQueCallback() {
             @Override
-            public void callback(RushQueue rushQueue) {
-                callback.complete(load(clazz, sql, rushQueue));
+            public void callback(RushQue rushQue) {
+                callback.complete(load(clazz, sql, rushQue));
             }
         });
     }
@@ -247,7 +247,7 @@ public class RushCore {
     }
 
     public void delete(List<? extends Rush> objects) {
-        RushQueue que = rushQueueProvider.blockForNextQueue();
+        RushQue que = queProvider.blockForNextQue();
         delete(objects, que);
     }
 
@@ -258,10 +258,10 @@ public class RushCore {
     }
 
     public void delete(final List<? extends Rush> objects, final RushCallback callback) {
-        rushQueueProvider.waitForNextQue(new RushQueueProvider.RushQueCallback() {
+        queProvider.waitForNextQue(new RushQueProvider.RushQueCallback() {
             @Override
-            public void callback(RushQueue rushQueue) {
-                delete(objects, rushQueue);
+            public void callback(RushQue rushQue) {
+                delete(objects, rushQue);
                 if (callback != null) {
                     callback.complete();
                 }
@@ -270,16 +270,16 @@ public class RushCore {
     }
 
     public void deleteAll(Class<? extends Rush> clazz) {
-        final RushQueue que = rushQueueProvider.blockForNextQueue();
+        final RushQue que = queProvider.blockForNextQue();
         deleteAll(clazz, que);
     }
 
     public void deleteAll(final Class<? extends Rush> clazz, final RushCallback callback) {
 
-        rushQueueProvider.waitForNextQue(new RushQueueProvider.RushQueCallback() {
+        queProvider.waitForNextQue(new RushQueProvider.RushQueCallback() {
             @Override
-            public void callback(RushQueue rushQueue) {
-                deleteAll(clazz, rushQueue);
+            public void callback(RushQue rushQue) {
+                deleteAll(clazz, rushQue);
                 if (callback != null) {
                     callback.complete();
                 }
@@ -294,7 +294,7 @@ public class RushCore {
     }
 
     public List<RushConflict> saveOnlyWithoutConflict(List<? extends Rush> objects) {
-        RushQueue que = rushQueueProvider.blockForNextQueue();
+        RushQue que = queProvider.blockForNextQue();
         return saveOnlyWithoutConflict(objects, que);
     }
 
@@ -305,10 +305,10 @@ public class RushCore {
     }
 
     public void saveOnlyWithoutConflict(final List<? extends Rush> objects, final RushConflictCallback callback) {
-        rushQueueProvider.waitForNextQue(new RushQueueProvider.RushQueCallback() {
+        queProvider.waitForNextQue(new RushQueProvider.RushQueCallback() {
             @Override
-            public void callback(RushQueue rushQueue) {
-                List<RushConflict> conflicts = saveOnlyWithoutConflict(objects, rushQueue);
+            public void callback(RushQue rushQue) {
+                List<RushConflict> conflicts = saveOnlyWithoutConflict(objects, rushQue);
                 if (callback != null) {
                     callback.complete(conflicts);
                 }
@@ -389,7 +389,7 @@ public class RushCore {
     private final RushDeleteStatementGenerator deleteStatementGenerator;
     private final RushJoinStatementGenerator rushJoinStatementGenerator;
     private final RushStatementRunner statementRunner;
-    private final RushQueueProvider rushQueueProvider;
+    private final RushQueProvider queProvider;
     private final RushConfig rushConfig;
     private final RushTableStatementGenerator rushTableStatementGenerator;
     private final RushClassLoader rushClassLoader;
@@ -405,7 +405,7 @@ public class RushCore {
                      RushConflictSaveStatementGenerator rushConflictSaveStatementGenerator,
                      RushDeleteStatementGenerator deleteStatementGenerator,
                      RushJoinStatementGenerator rushJoinStatementGenerator, RushStatementRunner statementRunner,
-                     RushQueueProvider queProvider,
+                     RushQueProvider queProvider,
                      RushConfig rushConfig,
                      RushTableStatementGenerator rushTableStatementGenerator,
                      RushClassLoader rushClassLoader,
@@ -420,7 +420,7 @@ public class RushCore {
         this.deleteStatementGenerator = deleteStatementGenerator;
         this.rushJoinStatementGenerator = rushJoinStatementGenerator;
         this.statementRunner = statementRunner;
-        this.rushQueueProvider = queProvider;
+        this.queProvider = queProvider;
         this.rushConfig = rushConfig;
         this.rushTableStatementGenerator = rushTableStatementGenerator;
         this.rushClassLoader = rushClassLoader;
@@ -439,48 +439,48 @@ public class RushCore {
         }       
     }
 
-    private void createTables(List<Class<? extends Rush>> classes, final RushQueue rushQueue) {
+    private void createTables(List<Class<? extends Rush>> classes, final RushQue que) {
         rushTableStatementGenerator.generateStatements(classes, rushColumns, new RushTableStatementGenerator.StatementCallback() {
             @Override
             public void statementCreated(String statement) {
                 logger.logSql(statement);
-                statementRunner.runRaw(statement, rushQueue);
+                statementRunner.runRaw(statement, que);
             }
         }, annotationCache);
-        rushQueueProvider.queComplete(rushQueue);
+        queProvider.queComplete(que);
     }
 
-    private void upgrade(List<Class<? extends Rush>> classes, RushUpgradeManager rushUpgradeManager, final RushQueue rushQueue) {
+    private void upgrade(List<Class<? extends Rush>> classes, RushUpgradeManager rushUpgradeManager, final RushQue que) {
         rushUpgradeManager.upgrade(classes, new RushUpgradeManager.UpgradeCallback() {
             @Override
             public RushStatementRunner.ValuesCallback runStatement(String sql) {
                 logger.logSql(sql);
-                return statementRunner.runGet(sql, rushQueue);
+                return statementRunner.runGet(sql, que);
             }
 
             @Override
             public void runRaw(String sql) {
                 logger.logSql(sql);
-                statementRunner.runRaw(sql, rushQueue);
+                statementRunner.runRaw(sql, que);
             }
 
             @Override
             public void createClasses(List<Class<? extends Rush>> missingClasses) {
-                createTables(missingClasses, rushQueue);
+                createTables(missingClasses, que);
             }
         }, annotationCache);
-        rushQueueProvider.queComplete(rushQueue);
+        queProvider.queComplete(que);
     }
 
     private static final int SAVE_GROUP_SIZE = 1000;
-    private void save(List<? extends Rush> objects, final RushQueue rushQueue) {
+    private void save(List<? extends Rush> objects, final RushQue que) {
         for (int i = 0; i < Math.ceil(objects.size() / ((float)SAVE_GROUP_SIZE)); i ++) {
 
             int start = i * SAVE_GROUP_SIZE;
             int end = Math.min(objects.size(), start + SAVE_GROUP_SIZE);
             List<? extends Rush> group = objects.subList(start, end);
 
-            statementRunner.startTransition(rushQueue);
+            statementRunner.startTransition(que);
             saveStatementGenerator.generateSaveOrUpdate(group, annotationCache, rushStringSanitizer, rushColumns, new RushSaveStatementGeneratorCallback() {
                 @Override
                 public void addRush(Rush rush, RushMetaData rushMetaData) {
@@ -490,13 +490,13 @@ public class RushCore {
                 @Override
                 public void createdOrUpdateStatement(String sql) {
                     logger.logSql(sql);
-                    statementRunner.runRaw(sql, rushQueue);
+                    statementRunner.runRaw(sql, que);
                 }
 
                 @Override
                 public void deleteStatement(String sql) {
                     logger.logSql(sql);
-                    statementRunner.runRaw(sql, rushQueue);
+                    statementRunner.runRaw(sql, que);
                 }
 
                 @Override
@@ -504,14 +504,14 @@ public class RushCore {
                     return idTable.get(rush);
                 }
             });
-            statementRunner.endTransition(rushQueue);
+            statementRunner.endTransition(que);
         }
-        rushQueueProvider.queComplete(rushQueue);
+        queProvider.queComplete(que);
     }
 
-    private List<RushConflict> saveOnlyWithoutConflict(List<? extends Rush> objects, final RushQueue rushQueue) {
+    private List<RushConflict> saveOnlyWithoutConflict(List<? extends Rush> objects, final RushQue que) {
         final List<RushConflict> conflicts = new ArrayList<>();
-        statementRunner.startTransition(rushQueue);
+        statementRunner.startTransition(que);
         rushConflictSaveStatementGenerator.conflictsFromGenerateSaveOrUpdate(objects, annotationCache, rushStringSanitizer, rushColumns, new RushConflictSaveStatementGenerator.Callback() {
             @Override
             public void conflictFound(RushConflict conflict) {
@@ -520,7 +520,7 @@ public class RushCore {
 
             @Override
             public <T extends Rush> T load(Class T, String sql) {
-                List<T> objects = RushCore.this.load(T, sql, rushQueue);
+                List<T> objects = RushCore.this.load(T, sql, que);
                 return objects.size() > 0 ? objects.get(0) : null;
             }
 
@@ -532,13 +532,13 @@ public class RushCore {
             @Override
             public void createdOrUpdateStatement(String sql) {
                 logger.logSql(sql);
-                statementRunner.runRaw(sql, rushQueue);
+                statementRunner.runRaw(sql, que);
             }
 
             @Override
             public void deleteStatement(String sql) {
                 logger.logSql(sql);
-                statementRunner.runRaw(sql, rushQueue);
+                statementRunner.runRaw(sql, que);
             }
 
             @Override
@@ -546,13 +546,13 @@ public class RushCore {
                 return idTable.get(rush);
             }
         });
-        statementRunner.endTransition(rushQueue);
-        rushQueueProvider.queComplete(rushQueue);
+        statementRunner.endTransition(que);
+        queProvider.queComplete(que);
         return conflicts;
     }
 
-    private void delete(List<? extends Rush> objects, final RushQueue rushQueue) {
-        statementRunner.startTransition(rushQueue);
+    private void delete(List<? extends Rush> objects, final RushQue que) {
+        statementRunner.startTransition(que);
         deleteStatementGenerator.generateDelete(objects, annotationCache, new RushDeleteStatementGenerator.Callback() {
 
             @Override
@@ -563,7 +563,7 @@ public class RushCore {
             @Override
             public void deleteStatement(String sql) {
                 logger.logSql(sql);
-                statementRunner.runRaw(sql, rushQueue);
+                statementRunner.runRaw(sql, que);
             }
 
             @Override
@@ -571,18 +571,18 @@ public class RushCore {
                 return idTable.get(rush);
             }
         });
-        statementRunner.endTransition(rushQueue);
-        rushQueueProvider.queComplete(rushQueue);
+        statementRunner.endTransition(que);
+        queProvider.queComplete(que);
     }
 
-    private void deleteAll(Class<? extends Rush> clazz, final RushQueue rushQueue) {
+    private void deleteAll(Class<? extends Rush> clazz, final RushQue que) {
         deleteStatementGenerator.generateDeleteAll(clazz, annotationCache, new RushDeleteStatementGenerator.Callback() {
             @Override
             public void removeRush(Rush rush) { }
             @Override
             public void deleteStatement(String sql) {
                 logger.logSql(sql);
-                statementRunner.runRaw(sql, rushQueue);
+                statementRunner.runRaw(sql, que);
             }
 
             @Override
@@ -590,17 +590,17 @@ public class RushCore {
                 return null;
             }
         });
-        rushQueueProvider.queComplete(rushQueue);
+        queProvider.queComplete(que);
     }
 
-    private <T extends Rush> List<T> load(Class<T> clazz, String sql, final RushQueue rushQueue) {
+    private <T extends Rush> List<T> load(Class<T> clazz, String sql, final RushQue que) {
         logger.logSql(sql);
-        RushStatementRunner.ValuesCallback values = statementRunner.runGet(sql, rushQueue);
+        RushStatementRunner.ValuesCallback values = statementRunner.runGet(sql, que);
         List<T> objects = rushClassLoader.loadClasses(clazz, rushColumns, annotationCache, values, new RushClassLoader.LoadCallback() {
             @Override
             public RushStatementRunner.ValuesCallback runStatement(String string) {
                 logger.logSql(string);
-                return statementRunner.runGet(string, rushQueue);
+                return statementRunner.runGet(string, que);
             }
 
             @Override
@@ -609,7 +609,7 @@ public class RushCore {
             }
         });
         values.close();
-        rushQueueProvider.queComplete(rushQueue);
+        queProvider.queComplete(que);
         if(objects == null) {
             throw new RushTableMissingEmptyConstructorException(clazz);
         }
@@ -620,29 +620,29 @@ public class RushCore {
         idTable.remove(rush);
     }
 
-    private void join(List<RushJoin> objects, final RushQueue rushQueue) {
-        statementRunner.startTransition(rushQueue);
+    private void join(List<RushJoin> objects, final RushQue que) {
+        statementRunner.startTransition(que);
         rushJoinStatementGenerator.createJoins(objects, new RushJoinStatementGenerator.Callback() {
             @Override
             public void runSql(String sql) {
                 logger.logSql(sql);
-                statementRunner.runRaw(sql, rushQueue);
+                statementRunner.runRaw(sql, que);
             }
         }, annotationCache);
-        statementRunner.endTransition(rushQueue);
-        rushQueueProvider.queComplete(rushQueue);
+        statementRunner.endTransition(que);
+        queProvider.queComplete(que);
     }
 
-    private void deleteJoin(List<RushJoin> objects, final RushQueue rushQueue) {
-        statementRunner.startTransition(rushQueue);
+    private void deleteJoin(List<RushJoin> objects, final RushQue que) {
+        statementRunner.startTransition(que);
         rushJoinStatementGenerator.deleteJoins(objects, new RushJoinStatementGenerator.Callback() {
             @Override
             public void runSql(String sql) {
                 logger.logSql(sql);
-                statementRunner.runRaw(sql, rushQueue);
+                statementRunner.runRaw(sql, que);
             }
         }, annotationCache);
-        statementRunner.endTransition(rushQueue);
-        rushQueueProvider.queComplete(rushQueue);
+        statementRunner.endTransition(que);
+        queProvider.queComplete(que);
     }
 }

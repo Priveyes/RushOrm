@@ -10,9 +10,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import co.uk.rushorm.core.RushConfig;
-import co.uk.rushorm.core.RushQueue;
+import co.uk.rushorm.core.RushQue;
 import co.uk.rushorm.core.RushStatementRunner;
 import co.uk.rushorm.core.exceptions.RushSqlException;
+import co.uk.rushorm.core.implementation.ReflectionUtils;
 
 /**
  * Created by stuartc on 11/12/14.
@@ -31,7 +32,7 @@ public class AndroidRushStatementRunner extends SQLiteOpenHelper implements Rush
     }
 
     @Override
-    public void runRaw(String statement, RushQueue rushQueue) {
+    public void runRaw(String statement, RushQue que) {
         try {
             getWritableDatabase().execSQL(statement);
         } catch (SQLiteException exception) {
@@ -44,7 +45,7 @@ public class AndroidRushStatementRunner extends SQLiteOpenHelper implements Rush
     }
 
     @Override
-    public ValuesCallback runGet(String sql, RushQueue rushQueue) {
+    public ValuesCallback runGet(String sql, RushQue que) {
         final Cursor cursor;
         try {
             cursor = getWritableDatabase().rawQuery(sql, null);
@@ -79,12 +80,12 @@ public class AndroidRushStatementRunner extends SQLiteOpenHelper implements Rush
     }
 
     @Override
-    public void startTransition(RushQueue rushQueue) {
+    public void startTransition(RushQue que) {
         getWritableDatabase().beginTransaction();
     }
 
     @Override
-    public void endTransition(RushQueue rushQueue) {
+    public void endTransition(RushQue que) {
         getWritableDatabase().setTransactionSuccessful();
         getWritableDatabase().endTransaction();
     }
@@ -106,7 +107,7 @@ public class AndroidRushStatementRunner extends SQLiteOpenHelper implements Rush
     }
 
     @Override
-    public boolean requiresUpgrade(long version, RushQueue rushQueue) {
+    public boolean requiresUpgrade(long version, RushQue que) {
         return getLastRunVersion() != version;
     }
 

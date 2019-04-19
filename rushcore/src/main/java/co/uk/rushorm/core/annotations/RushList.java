@@ -1,11 +1,9 @@
 package co.uk.rushorm.core.annotations;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.util.ArrayList;
-import java.util.List;
+import java.lang.annotation.*;
+import java.util.*;
 
-import co.uk.rushorm.core.Rush;
+import co.uk.rushorm.core.*;
 
 /**
  * Created by stuartc on 11/12/14.
@@ -13,6 +11,6 @@ import co.uk.rushorm.core.Rush;
 
 @Retention(RetentionPolicy.RUNTIME)
 public @interface RushList {
-    public Class<? extends Rush> classType();
-    public Class listType() default ArrayList.class;
+    Class<? extends Rush> classType();
+    Class listType() default ArrayList.class;
 }

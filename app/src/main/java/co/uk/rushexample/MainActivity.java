@@ -1,11 +1,13 @@
 package co.uk.rushexample;
 
-import android.app.*;
 import android.os.*;
-import android.support.v4.widget.*;
 import android.view.*;
 
-public class MainActivity extends Activity implements NavigationDrawerFragment.NavigationDrawerCallbacks {
+import androidx.appcompat.app.*;
+import androidx.drawerlayout.widget.*;
+import androidx.fragment.app.*;
+
+public class MainActivity extends AppCompatActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
         /**
          * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -13,7 +15,7 @@ public class MainActivity extends Activity implements NavigationDrawerFragment.N
         private NavigationDrawerFragment mNavigationDrawerFragment;
 
         /**
-         * Used to store the last screen title. For use in {@link #restoreActionBar()}.
+         * Used to store the last screen title. For use in {@link //#restoreActionBar()}.
          */
         private CharSequence mTitle;
 
@@ -23,7 +25,7 @@ public class MainActivity extends Activity implements NavigationDrawerFragment.N
             setContentView(R.layout.activity_main);
 
             mNavigationDrawerFragment = (NavigationDrawerFragment)
-                    getFragmentManager().findFragmentById(R.id.navigation_drawer);
+                    getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
             mTitle = getTitle();
 
             // Set up the drawer.
@@ -46,7 +48,7 @@ public class MainActivity extends Activity implements NavigationDrawerFragment.N
             }
 
             // update the main content by replacing fragments
-            FragmentManager fragmentManager = getFragmentManager();
+            FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction()
                     .replace(R.id.container, fragment)
                     .commit();
@@ -60,12 +62,12 @@ public class MainActivity extends Activity implements NavigationDrawerFragment.N
             }
         }
 
-        public void restoreActionBar() {
-            ActionBar actionBar = getActionBar();
-            actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-            actionBar.setDisplayShowTitleEnabled(true);
-            actionBar.setTitle(mTitle);
-        }
+//        public void restoreActionBar() {
+//            ActionBar actionBar = getSupportActionBar();
+//            actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+//            actionBar.setDisplayShowTitleEnabled(true);
+//            actionBar.setTitle(mTitle);
+//        }
 
 
         @Override
@@ -75,7 +77,7 @@ public class MainActivity extends Activity implements NavigationDrawerFragment.N
                 // if the drawer is not showing. Otherwise, let the drawer
                 // decide what to show in the action bar.
                 //getMenuInflater().inflate(R.menu.my, menu);
-                restoreActionBar();
+//                restoreActionBar();
                 return true;
             }
             return super.onCreateOptionsMenu(menu);

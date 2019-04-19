@@ -8,11 +8,11 @@ import java.util.Map;
  */
 public interface RushJoinStatementGenerator {
 
-    public interface Callback {
-        public void runSql(String sql);
+    interface Callback {
+        void runSql(String sql);
     }
 
-    public void createJoins(List<RushJoin> joins, Callback callback, Map<Class<? extends Rush>, AnnotationCache> annotationCache);
-    public void deleteJoins(List<RushJoin> joins, Callback callback, Map<Class<? extends Rush>, AnnotationCache> annotationCache);
-    public void deleteAll(Class<? extends Rush> parent, String field, Class<? extends Rush> child, String id, Callback callback, Map<Class<? extends Rush>, AnnotationCache> annotationCache);
+    void createJoins(List<RushJoin> joins, Callback callback, Map<Class<? extends Rush>, AnnotationCache> annotationCache);
+    void deleteJoins(List<RushJoin> joins, Callback callback, Map<Class<? extends Rush>, AnnotationCache> annotationCache);
+    void deleteAll(Class<? extends Rush> parent, String field, Class<? extends Rush> child, String id, Callback callback, Map<Class<? extends Rush>, AnnotationCache> annotationCache);
 }

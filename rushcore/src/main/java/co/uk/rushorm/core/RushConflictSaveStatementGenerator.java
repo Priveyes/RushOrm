@@ -8,11 +8,11 @@ import java.util.Map;
  */
 public interface RushConflictSaveStatementGenerator {
 
-    public interface Callback extends RushSaveStatementGeneratorCallback {
-        public void conflictFound(RushConflict conflict);
-        public <T extends Rush> T load(Class T, String sql);
+    interface Callback extends RushSaveStatementGeneratorCallback {
+        void conflictFound(RushConflict conflict);
+        <T extends Rush> T load(Class T, String sql);
     }
 
-    public void conflictsFromGenerateSaveOrUpdate(List<? extends Rush> objects, Map<Class<? extends Rush>, AnnotationCache> annotationCache, RushStringSanitizer rushStringSanitizer, RushColumns rushColumns, Callback saveCallback);
+    void conflictsFromGenerateSaveOrUpdate(List<? extends Rush> objects, Map<Class<? extends Rush>, AnnotationCache> annotationCache, RushStringSanitizer rushStringSanitizer, RushColumns rushColumns, Callback saveCallback);
 
 }

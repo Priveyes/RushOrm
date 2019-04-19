@@ -23,7 +23,6 @@ import co.uk.rushorm.core.implementation.ReflectionUtils;
  */
 public class ReflectionSaveStatementGenerator implements RushSaveStatementGenerator {
 
-
     private void addJoin(Map<String, List<BasicJoin>> joins, BasicJoin basicJoin) {
         if(!joins.containsKey(basicJoin.getTable())) {
             joins.put(basicJoin.getTable(), new ArrayList<>());
@@ -146,9 +145,8 @@ public class ReflectionSaveStatementGenerator implements RushSaveStatementGenera
     }
 
     private String joinFromField(List<BasicJoin> joins, Rush rush, Field field, Map<Class<? extends Rush>, AnnotationCache> annotationCache) {
-//Flip assignableFrom because Rush is never null
-//So isInstance return false instead nullpointerexception
-        if (field.getType().isInstance /*.isAssignableFrom*/(Rush.class)) {
+
+        if (Rush.class.isAssignableFrom(field.getType())) {
             if(annotationCache.get(field.getType()) == null) {
                 throw new RushClassNotFoundException(rush.getClass());
             }

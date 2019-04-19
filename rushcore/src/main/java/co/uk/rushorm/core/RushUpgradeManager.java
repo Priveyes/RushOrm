@@ -8,12 +8,12 @@ import java.util.Map;
  */
 public interface RushUpgradeManager {
 
-    public interface UpgradeCallback {
-        public RushStatementRunner.ValuesCallback runStatement(String sql);
-        public void runRaw(String sql);
-        public void createClasses(List<Class<? extends Rush>> missingClasses);
+    interface UpgradeCallback {
+        RushStatementRunner.ValuesCallback runStatement(String sql);
+        void runRaw(String sql);
+        void createClasses(List<Class<? extends Rush>> missingClasses);
     }
 
-    public void upgrade(List<Class<? extends Rush>> classList, UpgradeCallback callback, Map<Class<? extends Rush>, AnnotationCache> annotationCache);
+    void upgrade(List<Class<? extends Rush>> classList, UpgradeCallback callback, Map<Class<? extends Rush>, AnnotationCache> annotationCache);
 
 }

@@ -1,10 +1,16 @@
 package co.uk.rushorm.android;
 
-import android.content.*;
-import android.content.pm.*;
-import android.os.*;
+import android.content.Context;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
+import android.os.Build;
+import android.os.Bundle;
 
-import co.uk.rushorm.core.*;
+import java.util.ArrayList;
+import java.util.List;
+
+import co.uk.rushorm.core.RushConfig;
+import co.uk.rushorm.core.exceptions.RushClassNotFoundException;
 
 /**
  * Created by stuartc on 11/12/14.
@@ -38,6 +44,7 @@ public class AndroidRushConfig implements RushConfig {
 
             if (bundle != null && bundle.containsKey(RUSH_CLASSES_PACKAGE)) {
                 throw new RushDeprecatedException("Class searching no longer supported please remove this tag <meta-data android:name=\"Rush_classes_package\" android:value=\"co.uk.rushorm\" /> from the manifest and instead add your Rush classes directly to the AndroidInitializeConfig. See www.rushorm.com setup for more details.");
+
             }
 
         } catch (PackageManager.NameNotFoundException e) {
@@ -73,7 +80,7 @@ public class AndroidRushConfig implements RushConfig {
 
     @Override
     public boolean userBulkInsert() {
-        return true;
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN;
     }
 
     @Override

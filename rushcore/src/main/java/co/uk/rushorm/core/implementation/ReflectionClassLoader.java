@@ -1,5 +1,7 @@
 package co.uk.rushorm.core.implementation;
 
+import android.annotation.*;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -22,9 +24,8 @@ import co.uk.rushorm.core.exceptions.RushClassNotFoundException;
 /**
  * Created by Stuart on 14/12/14.
  */
+@SuppressLint("NewApi")
 public class ReflectionClassLoader implements RushClassLoader {
-
-
 
     private class Join {
         private final Rush parent;
@@ -44,12 +45,12 @@ public class ReflectionClassLoader implements RushClassLoader {
     }
 
     private interface AttachChild<T extends Rush> {
-        public void attach(T object, List<String> values) throws IllegalAccessException;
+        void attach(T object, List<String> values) throws IllegalAccessException;
     }
 
     @Override
     public <T extends Rush> List<T> loadClasses(Class<T> clazz, RushColumns rushColumns, Map<Class<? extends Rush>, AnnotationCache> annotationCache, RushStatementRunner.ValuesCallback valuesCallback, LoadCallback callback) {
-        return loadClasses(clazz, rushColumns, annotationCache, valuesCallback, callback, new HashMap<Class, Map<String, T>>(), null);
+        return loadClasses(clazz, rushColumns, annotationCache, valuesCallback, callback, new HashMap<>(), null);
     }
 
     public <T extends Rush> List<T> loadClasses(Class<T> clazz, RushColumns rushColumns, Map<Class<? extends Rush>, AnnotationCache> annotationCache, RushStatementRunner.ValuesCallback valuesCallback, LoadCallback callback, Map<Class, Map<String, T>> loadedClasses, AttachChild<T> attachChild) {
@@ -89,7 +90,7 @@ public class ReflectionClassLoader implements RushClassLoader {
         RushMetaData rushMetaData = new RushMetaData(values.get(0), Long.parseLong(values.get(1)), Long.parseLong(values.get(2)), Long.parseLong(values.get(3)));
 
         if(!loadedClasses.containsKey(clazz)) {
-            loadedClasses.put(clazz, new HashMap<String, T>());
+            loadedClasses.put(clazz, new HashMap<>());
         }
         if(loadedClasses.get(clazz).containsKey(rushMetaData.getId())) {
             return loadedClasses.get(clazz).get(rushMetaData.getId());
@@ -145,8 +146,8 @@ public class ReflectionClassLoader implements RushClassLoader {
         }
         if(clazz != null) {
             if(!joins.containsKey(clazz)) {
-                joins.put(clazz, new ArrayList<Join>());
-                joinTables.put(clazz, new ArrayList<String>());
+                joins.put(clazz, new ArrayList<>());
+                joinTables.put(clazz, new ArrayList<>());
             }
             if(annotationCache.get(clazz) == null) {
                 throw new RushClassNotFoundException(clazz);
@@ -246,16 +247,16 @@ public class ReflectionClassLoader implements RushClassLoader {
                     .append(joinTableName)
                     .append(".child \n");
             counter -= 3;
-            parentMap.put(joinTableName, new HashMap<String, Join>());
+            parentMap.put(joinTableName, new HashMap<>());
         }
         return stringBuilder.toString();
     }
 
     private interface LoopCallBack {
-        public void start();
-        public void actionAtIndex(int index);
-        public void join();
-        public void doAction(int at);
+        void start();
+        void actionAtIndex(int index);
+        void join();
+        void doAction(int at);
     }
 
     private void doLoop(int max, int interval, LoopCallBack callBack) {

@@ -1,5 +1,7 @@
 package co.uk.rushorm.core;
 
+import androidx.annotation.*;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -68,6 +70,7 @@ public class RushPageList<T extends Rush> implements RushListField<T>, Iterable<
         return rush != null && Rush.class.isAssignableFrom(rush.getClass()) && new RushSearch().whereChildOf(parentClazz, field, parentId).whereId(((Rush) rush).getId()).findSingle(clazz) != null;
     }
 
+    @NonNull
     @Override
     public Iterator<T> iterator() {
         return new RushPageListIterator();

@@ -3,13 +3,13 @@ package co.uk.rushorm.core;
 /**
  * Created by Stuart on 10/12/14.
  */
-public interface RushQueueProvider {
+public interface RushQueProvider {
 
     interface RushQueCallback {
-        void callback(RushQueue rushQueue);
+        void callback(RushQue rushQue);
     }
 
-    RushQueue blockForNextQueue();
+    RushQue blockForNextQue();
     void waitForNextQue(RushQueCallback rushQueCallback);
-    void queComplete(RushQueue rushQueue);
+    void queComplete(RushQue que);
 }

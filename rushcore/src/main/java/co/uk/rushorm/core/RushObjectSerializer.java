@@ -8,10 +8,10 @@ import java.util.Map;
  */
 public interface RushObjectSerializer {
 
-    public interface Callback {
-        public RushMetaData getMetaData(Rush rush);
+    interface Callback {
+        RushMetaData getMetaData(Rush rush);
     }
 
-    public String serialize(List<? extends Rush> objects, String idName, String versionName, RushColumns rushColumns, Map<Class<? extends Rush>, AnnotationCache> annotationCache, Callback callback);
+    String serialize(List<? extends Rush> objects, String idName, String versionName, RushColumns rushColumns, Map<Class<? extends Rush>, AnnotationCache> annotationCache, Callback callback);
 
 }

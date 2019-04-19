@@ -10,19 +10,26 @@ import co.uk.rushorm.core.annotations.*;
  */
 public class Car extends RushObject {
 
-    public String color;
-    public co.uk.rushexample.Demo.Engine engine;
+    private String color;
+    private Engine engine;
 
-    public String anotherField;
+    private String anotherField;
 
-    @RushList(classType = co.uk.rushexample.Demo.Wheel.class)
-    public List<co.uk.rushexample.Demo.Wheel> wheels;
+    public List<Wheel> getWheels() {
+        return wheels;
+    }
+    @RushList(classType = Wheel.class)
+    public List<Wheel> wheels;
+    @RushList(classType = Drivers.class)
+    private List<Drivers> drivers;
+
+//    private List<String> stringList;
 
     public Car(){
         /* Empty constructor required */
     }
 
-    public Car(String color, co.uk.rushexample.Demo.Engine engine){
+    public Car(String color, Engine engine){
         this.color = color;
         this.engine = engine;
     }

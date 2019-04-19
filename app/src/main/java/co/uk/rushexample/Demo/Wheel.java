@@ -11,7 +11,7 @@ public class Wheel extends RushObject {
          /* Empty constructor required */
     }
 
-    public String make;
+    private String make;
 
     public Wheel(String make){
         this.make = make;

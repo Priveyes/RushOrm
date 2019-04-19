@@ -8,10 +8,10 @@ import java.util.Map;
  */
 public interface RushTableStatementGenerator {
 
-    public interface StatementCallback {
-        public void statementCreated(String statement);
+    interface StatementCallback {
+        void statementCreated(String statement);
     }
 
-    public void generateStatements(List<Class<? extends Rush>> classes, RushColumns rushColumns, StatementCallback statementCallback, Map<Class<? extends Rush>, AnnotationCache> annotationCache);
+    void generateStatements(List<Class<? extends Rush>> classes, RushColumns rushColumns, StatementCallback statementCallback, Map<Class<? extends Rush>, AnnotationCache> annotationCache);
 
 }

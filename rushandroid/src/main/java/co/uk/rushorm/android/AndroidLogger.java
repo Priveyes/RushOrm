@@ -28,7 +28,7 @@ public class AndroidLogger implements Logger {
     @Override
     public void logSql(String sql) {
         if(rushConfig.log() && sql != null) {
-            Log.d(TAG, sql);
+            Log.i(TAG, sql);
         }
     }
 

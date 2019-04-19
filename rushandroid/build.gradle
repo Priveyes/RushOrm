@@ -1,12 +1,12 @@
 apply plugin: 'com.android.library'
-apply plugin: 'com.github.kt3k.coveralls'
+//apply plugin: 'com.github.kt3k.coveralls'
 
 android {
     compileSdkVersion 28
     buildToolsVersion '28.0.3'
 
     defaultConfig {
-        minSdkVersion 14
+        minSdkVersion 19
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
@@ -25,7 +25,8 @@ android {
 
     buildTypes {
         debug {
-            testCoverageEnabled true
+            //https://stackoverflow.com/questions/28790723/how-can-i-run-jacoco-in-android-studio-for-code-coverage
+            testCoverageEnabled false
         }
     }
 
@@ -43,13 +44,18 @@ android {
     }
 }
 
-coveralls {
-    jacocoReportPath = "${buildDir}/reports/coverage/debug/report.xml"
+dependencies {
+    testImplementation 'junit:junit:4.12'
+    implementation 'androidx.appcompat:appcompat:1.0.2'
 }
 
-tasks.coveralls {
-    dependsOn 'connectedAndroidTest'
-    onlyIf { System.env.'CI' }
-}
+//coveralls {
+//    jacocoReportPath = "${buildDir}/reports/coverage/debug/report.xml"
+//}
+//
+//tasks.coveralls {
+//    dependsOn 'connectedAndroidTest'
+//    onlyIf { System.env.'CI' }
+//}
 
 // Note: To build jar and javadocs use 'mvn install' on root directory which contains pom.xml file

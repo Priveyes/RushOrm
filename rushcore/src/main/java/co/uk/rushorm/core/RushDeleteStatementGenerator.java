@@ -8,12 +8,12 @@ import java.util.Map;
  */
 public interface RushDeleteStatementGenerator {
 
-    public interface Callback extends RushStatementGeneratorCallback{
-        public void removeRush(Rush rush);
-        public void deleteStatement(String sql);
+    interface Callback extends RushStatementGeneratorCallback{
+        void removeRush(Rush rush);
+        void deleteStatement(String sql);
     }
 
-    public void generateDelete(List<? extends Rush> objects, Map<Class<? extends Rush>, AnnotationCache> annotationCache, Callback deleteCallback);
-    public void generateDeleteAll(Class<? extends Rush> clazz, Map<Class<? extends Rush>, AnnotationCache> annotationCache, Callback deleteCallback);
+    void generateDelete(List<? extends Rush> objects, Map<Class<? extends Rush>, AnnotationCache> annotationCache, Callback deleteCallback);
+    void generateDeleteAll(Class<? extends Rush> clazz, Map<Class<? extends Rush>, AnnotationCache> annotationCache, Callback deleteCallback);
 
 }

@@ -1,5 +1,7 @@
 package co.uk.rushorm.core.search;
 
+import androidx.annotation.*;
+
 import co.uk.rushorm.core.Rush;
 
 /**
@@ -17,6 +19,7 @@ public class RushWhere  {
         return element;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "{\"element\":\"" + element + "\"," +

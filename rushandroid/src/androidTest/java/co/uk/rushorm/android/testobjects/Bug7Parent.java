@@ -15,7 +15,7 @@ public class Bug7Parent extends RushObject {
     private List<Bug7Child> children;
 
     public Bug7Parent() {
-        this.children = new ArrayList<Bug7Child>();
+        this.children = new ArrayList<>();
     }
 
     public boolean add(Bug7Child child) {

@@ -7,11 +7,11 @@ import java.util.Map;
  * Created by Stuart on 03/03/15.
  */
 public interface AnnotationCache {
-    public List<String> getFieldToIgnore();
-    public List<String> getDisableAutoDelete();
-    public Map<String, Class<? extends Rush>> getListsClasses();
-    public Map<String, Class<? extends List>> getListsTypes();
-    public String getSerializationName();
-    public String getTableName();
-    public boolean prefixTable();
+    List<String> getFieldToIgnore();
+    List<String> getDisableAutoDelete();
+    Map<String, Class<? extends Rush>> getListsClasses();
+    Map<String, Class<? extends List>> getListsTypes();
+    String getSerializationName();
+    String getTableName();
+    boolean prefixTable();
 }

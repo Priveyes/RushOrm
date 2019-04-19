@@ -1,15 +1,9 @@
 package co.uk.rushorm.core.implementation.Insert;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-import co.uk.rushorm.core.AnnotationCache;
-import co.uk.rushorm.core.Rush;
-import co.uk.rushorm.core.RushConfig;
-import co.uk.rushorm.core.RushMetaData;
-import co.uk.rushorm.core.RushSaveStatementGeneratorCallback;
-import co.uk.rushorm.core.implementation.ReflectionUtils;
-import co.uk.rushorm.core.implementation.RushSqlUtils;
+import co.uk.rushorm.core.*;
+import co.uk.rushorm.core.implementation.*;
 
 /**
  * Created by Stuart on 03/04/15.
@@ -75,7 +69,7 @@ public class SqlSingleInsertGenerator implements RushSqlInsertGenerator {
                         .append(commaSeparated(update.values))
                         .append(")");
 
-                String sql = String.format(rushConfig.usingMySql() ? RushSqlUtils.MULTIPLE_INSERT_UPDATE_TEMPLATE_MYSQL : RushSqlUtils.MULTIPLE_INSERT_UPDATE_TEMPLATE_SQLITE,
+                String sql = String.format(/*rushConfig.usingMySql() ? RushSqlUtils.MULTIPLE_INSERT_UPDATE_TEMPLATE_MYSQL :*/ RushSqlUtils.MULTIPLE_INSERT_UPDATE_TEMPLATE_SQLITE,
                         annotationCache.get(entry.getKey()).getTableName(),
                         columns,
                         valuesString.toString());

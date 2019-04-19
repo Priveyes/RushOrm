@@ -8,11 +8,11 @@ import java.util.Map;
  */
 public interface RushClassLoader {
 
-    public interface LoadCallback {
-        public RushStatementRunner.ValuesCallback runStatement(String string);
-        public void didLoadObject(Rush rush, RushMetaData rushMetaData);
+    interface LoadCallback {
+        RushStatementRunner.ValuesCallback runStatement(String string);
+        void didLoadObject(Rush rush, RushMetaData rushMetaData);
     }
 
-    public <T extends Rush> List<T> loadClasses(Class<T> clazz, RushColumns rushColumns, Map<Class<? extends Rush>, AnnotationCache> annotationCache, RushStatementRunner.ValuesCallback valuesCallback, LoadCallback callback);
+    <T extends Rush> List<T> loadClasses(Class<T> clazz, RushColumns rushColumns, Map<Class<? extends Rush>, AnnotationCache> annotationCache, RushStatementRunner.ValuesCallback valuesCallback, LoadCallback callback);
 
 }

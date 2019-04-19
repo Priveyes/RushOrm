@@ -1,5 +1,7 @@
 package co.uk.rushorm.core.search;
 
+import androidx.annotation.*;
+
 import java.util.Map;
 
 import co.uk.rushorm.core.AnnotationCache;
@@ -37,6 +39,7 @@ public class RushWhereHasChild extends RushWhere {
         return joinTable + ".child" + modifier + "'" + id + "'";
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "{\"field\":\"" + field + "\"," +

@@ -7,10 +7,10 @@ import java.lang.reflect.Field;
  */
 public interface RushColumn<T> {
 
-    public String sqlColumnType();
-    public String serialize(T object, RushStringSanitizer stringSanitizer);
-    public T deserialize(String value);
-    public Class[] classesColumnSupports();
+    String sqlColumnType();
+    String serialize(T object, RushStringSanitizer stringSanitizer);
+    T deserialize(String value);
+    Class[] classesColumnSupports();
 
 
 }

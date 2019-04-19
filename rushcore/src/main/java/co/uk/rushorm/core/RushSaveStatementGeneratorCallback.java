@@ -5,7 +5,7 @@ package co.uk.rushorm.core;
  */
 public interface RushSaveStatementGeneratorCallback extends RushStatementGeneratorCallback {
 
-    public void addRush(Rush rush, RushMetaData rushMetaData);
-    public void createdOrUpdateStatement(String sql);
+    void addRush(Rush rush, RushMetaData rushMetaData);
+    void createdOrUpdateStatement(String sql);
 
 }

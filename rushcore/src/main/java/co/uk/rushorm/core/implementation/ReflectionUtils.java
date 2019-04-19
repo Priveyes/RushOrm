@@ -1,15 +1,9 @@
 package co.uk.rushorm.core.implementation;
 
-import java.lang.reflect.Field;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
+import java.lang.reflect.*;
+import java.util.*;
 
-import co.uk.rushorm.core.AnnotationCache;
-import co.uk.rushorm.core.Rush;
-import co.uk.rushorm.core.RushStatementGeneratorCallback;
+import co.uk.rushorm.core.*;
 
 
 /**
@@ -47,10 +41,10 @@ public class ReflectionUtils {
     }
 
     public interface LoopCallBack {
-        public void start();
-        public void actionAtIndex(int index);
-        public void join();
-        public void doAction();
+        void start();
+        void actionAtIndex(int index);
+        void join();
+        void doAction();
     }
 
     public static void doLoop(int max, int interval, LoopCallBack callBack) {

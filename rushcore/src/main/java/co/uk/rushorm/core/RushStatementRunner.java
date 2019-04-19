@@ -13,13 +13,13 @@ public interface RushStatementRunner {
         void close();
     }
 
-    void runRaw(String statement, RushQueue rushQueue);
-    ValuesCallback runGet(String sql, RushQueue rushQueue);
-    void startTransition(RushQueue rushQueue);
-    void endTransition(RushQueue rushQueue);
+    void runRaw(String statement, RushQue que);
+    ValuesCallback runGet(String sql, RushQue que);
+    void startTransition(RushQue que);
+    void endTransition(RushQue que);
     
     boolean isFirstRun();
     void initializeComplete(long version);
-    boolean requiresUpgrade(long version, RushQueue rushQueue);
+    boolean requiresUpgrade(long version, RushQue que);
 
 }

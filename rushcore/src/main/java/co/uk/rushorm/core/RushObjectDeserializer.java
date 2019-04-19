@@ -8,9 +8,9 @@ import java.util.Map;
  */
 public interface RushObjectDeserializer {
 
-    public interface Callback {
-        public void addRush(Rush rush, RushMetaData rushMetaData);
+    interface Callback {
+        void addRush(Rush rush, RushMetaData rushMetaData);
     }
-    public <T extends Rush> List<T> deserialize(String string, String idName, String versionName, RushColumns rushColumns, Map<Class<? extends Rush>, AnnotationCache> annotationCache, Class<T> clazz, Callback callback);
+    <T extends Rush> List<T> deserialize(String string, String idName, String versionName, RushColumns rushColumns, Map<Class<? extends Rush>, AnnotationCache> annotationCache, Class<T> clazz, Callback callback);
 
 }
